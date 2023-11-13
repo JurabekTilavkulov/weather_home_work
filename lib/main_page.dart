@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
   DayTimeNetService dayTimeNetService=DayTimeNetService();
   DayTimeWeather dayTimeWeather=DayTimeWeather();
   List<Forecastday> list=[];
- static const List<String> shaxarlar=["Moscow","Samarkand","Stanbul","Delhi","Bukhara",];
+ static const List<String> shaxarlar=["Moscow","Samarkand","Istanbul","Delhi","Bukhara",];
   List<DayTimeWeather> oxiri=[];
 
   @override
@@ -65,7 +65,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: Stack(children: [
         Container(
-          
+
           child: Image.asset("assets/orqa.png",width:400,fit:BoxFit.fill ,),
         ),
         Container(
@@ -88,9 +88,18 @@ class _MainPageState extends State<MainPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset("assets/icons/icon_romb.png",width: 40,),
+                  IconButton(onPressed: (){
+                    setState(() {
+
+                    });
+                  }, icon:Icon(Icons.account_tree_sharp),color: Colors.white,iconSize: 30,),
                   Text("${currentWeatherData.location?.region}",style: TextStyle(color: Colors.white,fontSize: 18),),
-                  Image.asset("assets/icons/icon_rear.png",width: 40,)
+                  IconButton(onPressed: (){
+                    setState(() {
+
+                    });
+                  }, icon:Icon(Icons.cached),color: Colors.white,iconSize: 30,)
+
                 ],
               ),
             ), // tepadan birinchi
@@ -188,13 +197,14 @@ class _MainPageState extends State<MainPage> {
 
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
+
                   itemBuilder: (context,index){
                     return builtItemOxiri(index);
                   },
                   separatorBuilder:(context,index){
                     return Divider(thickness: 5, color: Colors.red,);
                   },
-                  itemCount: shaxarlar.length)
+                  itemCount: 5),
             )  // oxirgi qator
 
           ],
@@ -272,38 +282,45 @@ class _MainPageState extends State<MainPage> {
   Widget builtItemOxiri(int index1){
 
     print("aaaa${index1}");
-    return Padding(
-        padding: EdgeInsets.only(left: 10),
-      child: Container(
-
-        child: Container(
-          width: 150,
-          height: 70,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0x905D5ED9), Color(0x8E9444EA)]
-              )
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Image.asset("assets/bulut.png",width: 20,),
-              Column(children: [
-                Text("${oxiri[index1].location?.region}",style: TextStyle(color: Colors.white,fontSize: 14)),
-                Text("${oxiri[index1].forecast?.forecastday?[0].day?.condition?.text}",style: TextStyle(color: Colors.white,fontSize: 13)),
-              ],),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("${oxiri[index1].current?.tempC}",style: TextStyle(color: Colors.white,fontSize:14,fontWeight: FontWeight.bold)),
-                  Image.asset("assets/circle.png",width: 5,)],),
-            ],
-          ),
-        ),)
+    return GestureDetector(
+      onTap: (){
+        setState(() {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context)=>MainPage(city:"${oxiri[index1].location?.region}" ,)));
+        });
+      },
+      child:  Padding(
+          padding: EdgeInsets.only(left: 10),
+          child: Container(
+            width: 200,
+            height: 80,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0x905D5ED9), Color(0x8E9444EA)]
+                )
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Image.network("http:${oxiri[index1].current?.condition?.icon}",width: 40,),
+                Column(children: [
+                  Text("${oxiri[index1].location?.region}",style: TextStyle(color: Colors.white,fontSize: 14)),
+                  Text("${oxiri[index1].forecast?.forecastday?[0].day?.condition?.text}",style: TextStyle(color: Colors.white,fontSize: 13)),
+                ],),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${oxiri[index1].current?.tempC}",style: TextStyle(color: Colors.white,fontSize:14,fontWeight: FontWeight.bold)),
+                    Image.asset("assets/circle.png",width: 5,)],),
+              ],
+            ),
+          )
+      ),
     );
+
   }
 }
