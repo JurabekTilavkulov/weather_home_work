@@ -40,21 +40,27 @@ class _MainPageState extends State<MainPage> {
   void malumotOlishUchun()async{
     netServiced.getCurrWeath(_city??"Tashkent").then((value) {
       // bu yerda value netServiceni return qiymatini oladi
-      currentWeatherData=value;
+      setState(() {
+        currentWeatherData=value;
+      });
+
 
     });
   }
 
   void dayTimeMalumotlari()async{
     dayTimeNetService.soatbayWeather(_city??"Tashkent").then((value){
-      dayTimeWeather=value;
-      list=dayTimeWeather.forecast!.forecastday!;
+      setState(() {
+        dayTimeWeather=value;
+        list=dayTimeWeather.forecast!.forecastday!;
 
-      for(int i=0;i<shaxarlar.length; i++){
-        dayTimeNetService.soatbayWeather(shaxarlar[i]).then((value){
-          oxiri.add(value);
-        });
-      }
+        for(int i=0;i<shaxarlar.length; i++){
+          dayTimeNetService.soatbayWeather(shaxarlar[i]).then((value){
+            oxiri.add(value);
+          });
+        }
+      });
+
     });
   }
 
@@ -199,6 +205,7 @@ class _MainPageState extends State<MainPage> {
                 scrollDirection: Axis.horizontal,
 
                   itemBuilder: (context,index){
+
                     return builtItemOxiri(index);
                   },
                   separatorBuilder:(context,index){
@@ -281,7 +288,7 @@ class _MainPageState extends State<MainPage> {
   }
   Widget builtItemOxiri(int index1){
 
-    print("aaaa${index1}");
+
     return GestureDetector(
       onTap: (){
         setState(() {
